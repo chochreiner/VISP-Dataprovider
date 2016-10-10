@@ -8,9 +8,11 @@ import org.quartz.PersistJobDataAfterExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import vispDataProvider.datasources.DataGenerationStateRepository;
 import vispDataProvider.entities.GenerationState;
 import vispDataProvider.generationPattern.PatternSelector;
+import vispDataProvider.monitor.ProcessingNodeMonitor;
 
 @PersistJobDataAfterExecution
 public abstract class DataGeneratorJob implements Job {
@@ -27,9 +29,13 @@ public abstract class DataGeneratorJob implements Job {
 
     protected static final Logger LOG = LoggerFactory.getLogger(DataGeneratorJob.class);
 
+
+    @Autowired
+    protected ProcessingNodeMonitor monitor;
+    
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-
+    	
         jdMap = jobExecutionContext.getJobDetail().getJobDataMap();
 
         if (jdMap.get("amount") != null) {
@@ -46,8 +52,15 @@ public abstract class DataGeneratorJob implements Job {
 
         customDataGeneration();
 
+        /* Monitor Outgoing Messages */
+        for (int i = 0; i < state.getAmount(); i++){
+	        monitor.notifyOutgoingMessage();
+        }
+        
         state = generationPattern.iterate(state);
         storeGenerationState();
+        
+        
     }
 
 
