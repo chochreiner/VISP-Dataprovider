@@ -63,7 +63,7 @@ public class ProcessingNodeMonitor {
 
 	public void notifyOutgoingMessage() {
 
-		LOG.info(" + Outgoing Message - Destinations: " + destinations);
+//		LOG.info(" + Outgoing Message - Destinations: " + destinations);
 		
 		if (destinations == null)
 			return;
@@ -83,7 +83,7 @@ public class ProcessingNodeMonitor {
 
 	public void notifyOutgoingMessage(List<String> destinationOperators) {
 
-		LOG.info(" + Outgoing Message - Destinations: " + destinationOperators);
+//		LOG.info(" + Outgoing Message - Destinations: " + destinationOperators);
 		
 		if (destinationOperators == null)
 			return;

@@ -49,7 +49,11 @@ public abstract class DataGeneratorJob implements Job {
         if (jdMap.get("direction") != null) {
             state.setDirection(jdMap.get("direction").toString());
         }
-
+        
+        if (jdMap.get("time") != null) {
+            state.setTime(jdMap.get("time").toString());
+        }
+        
         customDataGeneration();
 
         /* Monitor Outgoing Messages */
@@ -70,6 +74,7 @@ public abstract class DataGeneratorJob implements Job {
         jdMap.put("direction", state.getDirection());
         jdMap.put("amount", state.getAmount().toString());
         jdMap.put("iteration", state.getIteration().toString());
+        jdMap.put("time", state.getTime());
     }
 
 
