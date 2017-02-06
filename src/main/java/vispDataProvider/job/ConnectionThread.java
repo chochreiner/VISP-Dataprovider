@@ -1,8 +1,8 @@
 package vispDataProvider.job;
 
 
-import entities.Message;
 import vispDataProvider.dataSender.MessageSender;
+import entities.Message;
 
 public class ConnectionThread implements Runnable {
 

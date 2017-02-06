@@ -5,7 +5,7 @@ import vispDataProvider.entities.GenerationState;
 public class PatternSelector {
 
     private String generationPattern;
-
+    
     public PatternSelector(String pattern) {
         this.generationPattern = pattern;
     }
@@ -18,6 +18,8 @@ public class PatternSelector {
             case "Constant": pattern = new Constant(); break;
             case "Linear Increase": pattern = new LinearIncrease(); break;
             case "Pyramid": pattern = new Pyramid(); break;
+            case "CustomizablePattern": pattern = new CustomizablePattern(); break;
+            
             default: throw new IllegalArgumentException("configured Pattern is not available");
         }
 

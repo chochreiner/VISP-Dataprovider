@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import vispDataProvider.entities.GenerationState;
 import vispDataProvider.generationPattern.PatternSelector;
+import vispDataProvider.monitor.ProcessingNodeMonitor;
 
 @PersistJobDataAfterExecution
 @DisallowConcurrentExecution
@@ -28,7 +29,6 @@ public abstract class DataGeneratorJob extends QuartzJobBean {
 
     @Override
     public void executeInternal(JobExecutionContext jobExecutionContext) {
-
         jdMap = jobExecutionContext.getJobDetail().getJobDataMap();
 
         if (jdMap.get("amount") != null) {
@@ -47,8 +47,23 @@ public abstract class DataGeneratorJob extends QuartzJobBean {
             state.setOverallCounter(Integer.parseInt(jdMap.get("overallCounter").toString()));
         }
 
+        if (jdMap.get("time") != null) {
+            state.setTime(jdMap.get("time").toString());
+        }
+
         customDataGeneration();
         state = new PatternSelector(pattern).iterate(state);
+
+
+        customDataGeneration();
+
+        //TODO make this configurable to reduce the overhead
+        /* Monitor Outgoing Messages */
+        for (int i = 0; i < state.getAmount(); i++){
+            ProcessingNodeMonitor monitor = new ProcessingNodeMonitor();
+            monitor.notifyOutgoingMessage();
+        }
+
         storeGenerationState();
     }
 
@@ -60,6 +75,7 @@ public abstract class DataGeneratorJob extends QuartzJobBean {
         jdMap.put("amount", state.getAmount().toString());
         jdMap.put("iteration", state.getIteration().toString());
         jdMap.put("overallCounter", state.getOverallCounter().toString());
+        jdMap.put("time", state.getTime());
     }
 
     public void setPattern(String pattern) {

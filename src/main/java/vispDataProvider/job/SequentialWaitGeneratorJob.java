@@ -1,8 +1,7 @@
 package vispDataProvider.job;
 
-
-import entities.Message;
 import vispDataProvider.dataSender.RabbitMQSender;
+import entities.Message;
 
 public class SequentialWaitGeneratorJob extends DataGeneratorJob {
 
